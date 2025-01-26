@@ -6,13 +6,13 @@ import MainHeader from "./MainHeader";
 
 const MainNavigation = props => {
     return <MainHeader>
-        <button className="main-navgation__menu-btn">
+        <button className="main-navigation__menu-btn">
             <span />
             <span />
             <span />
         </button>
         <h1 className="main-navigation__title">
-        <Link to="/">YourPlaces</Link> 
+        <Link to="/">나의 앱</Link> 
         </h1>
         <nav>
             ...
