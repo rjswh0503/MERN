@@ -4,6 +4,7 @@
   padding: 0;
   width: 90%;
   max-width: 50rem;
-  
+  display: flex;
+  justify-content: center;
   flex-wrap: wrap;
 }
