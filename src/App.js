@@ -1,10 +1,17 @@
+import React from 'react';
+import {BrowserRouter as Router,Route,Routes} from 'react-router-dom';
+import Users from './user/pages/Users';
+import NewPlace from './places/pages/NewPlace';
 
-function App() {
+const App = () => {
   return (
-    <div>
-      
-    </div>
+    <Router>
+      <Routes>
+          <Route path="/" element={<Users />}/>
+          <Route path="/places/new" element={<NewPlace />}/>
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
