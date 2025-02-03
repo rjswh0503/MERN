@@ -2,6 +2,7 @@ import React from "react";
 
 
 import Card from "../../shared/components/UIElements/Card";
+import Button from "../../shared/components/FormElements/Button";
 import './PlaceItem.css';
 
 
@@ -19,9 +20,9 @@ const PlaceItem = props => {
 
             </div>
             <div className="place-item__actions">
-                <button>지도 보기</button>
-                <button>수정</button>
-                <button>삭제</button>
+                <Button inverse>지도 보기</Button>
+                <Button to={`/places/${props.id}`}>수정</Button>
+                <Button danger >삭제</Button>
             </div>
         </Card>
     </li>;
