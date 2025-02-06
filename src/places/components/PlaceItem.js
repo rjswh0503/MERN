@@ -12,24 +12,22 @@ const PlaceItem = props => {
     const [showMap, setShowMap] = useState(false);
 
 
-    const openMapHandler = () => {
-        setShowMap(true);
+    const openMapHandler = () =>  setShowMap(true);
 
-    }  
+    const closeMapHandler = () => setShowMap(false);
 
-    const closeMapHandler = () => {
-        setShowMap(false);
-    }
-
+    
     return ( 
         <React.Fragment>
-            <Modal show={showMap}
-             onCancel={closeMapHandler}
-              header={props.address}
-               contentClass="place-item__modal-content"
-               footerClass="place-item__modal-actions"
-               footer={<Button onClick={closeMapHandler}>닫기</Button>}
+            <Modal 
+                show={showMap}
+                onCancel={closeMapHandler}
+                header={props.address}
+                contentClass="place-item__modal-content"
+                footerClass="place-item__modal-actions"
+                footer={<Button onClick={closeMapHandler}>닫기</Button>}
             >
+                {/*Modal창 내용 */}
                 <div className="map-container">
                     <h2>맵임!</h2>
                 </div>
