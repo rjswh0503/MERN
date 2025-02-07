@@ -6,7 +6,7 @@ const NewPlace = () => {
   return (
     <div>
       <form className='place-form'>
-      <Input element="input" type="text" label="title" validators={[]} onChange />
+      <Input element="input" type="text" label="Title" vaildators={[]} errorText="제목을 입력하세요." />
       </form>
     </div>
   );
