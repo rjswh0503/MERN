@@ -56,9 +56,15 @@ const NewPlace = () => {
   },[]);
 
 
+  const placeSubmitHnadler = event => {
+    event.preventDefault();
+    console.log(formState.inputs); // 나중에 백엔드로 보냄
+  }
+
+
   return (
     
-      <form className='place-form'>
+      <form className='place-form' onSubmit={placeSubmitHnadler}>
       <Input
       id="title"
       element="input" 
@@ -68,6 +74,7 @@ const NewPlace = () => {
       errorText="제목을 입력하세요."
       onInput={inputHandler}
       />
+      
       <Input 
       id="description"
       element="textarea" 
@@ -76,6 +83,17 @@ const NewPlace = () => {
       errorText="내용을 입력하세요.(최소5글자)"
       onInput={inputHandler}
       />
+
+      <Input 
+      id="address"
+      element="input"
+      type="text" 
+      label="address" 
+      validators={[VALIDATOR_REQUIRE()]} 
+      errorText="주소를를 입력하세요"
+      onInput={inputHandler}
+      />
+      
       <Button type="submit" disabled={!formState.isValid}>추가</Button>
       </form>
     
