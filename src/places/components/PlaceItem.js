@@ -23,7 +23,7 @@ const PlaceItem = props => {
             <Modal 
                 show={showMap}
                 onCancel={closeMapHandler}
-                header={props.address}
+                header={props.title}
                 contentClass="place-item__modal-content"
                 footerClass="place-item__modal-actions"
                 footer={<Button onClick={closeMapHandler}>닫기</Button>}
