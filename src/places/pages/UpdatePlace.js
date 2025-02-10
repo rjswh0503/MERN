@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import Card from "../../shared/components/UIElements/Card";
 import {VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH} from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 import './PlaceForm.css';
@@ -60,18 +61,21 @@ const UpdatePlace = () => {
     const identfiedPlace = DUMMY_PLACES.find(p => p.id === placeId)
 
     useEffect(() => {
-        setFormData({
-            title: {
-                value : identfiedPlace.title,
-                isValid: true
-            },
-            description: {
-                value : identfiedPlace.description,
-                isValid: true
-            }
-        }, 
-        true
-    );
+        if(identfiedPlace){
+            setFormData({
+                title: {
+                    value : identfiedPlace.title,
+                    isValid: true
+                },
+                description: {
+                    value : identfiedPlace.description,
+                    isValid: true
+                }
+            }, 
+            true
+        );
+        }
+        
     setIsLoading(false)
     }, [setFormData, identfiedPlace])
     
@@ -82,8 +86,12 @@ const UpdatePlace = () => {
     }
     
     if(!identfiedPlace){
+        
         return ( <div className="center">
-            <h2>장소를 찾을 수 없습니다.</h2>
+            <Card>
+                <h2>장소를 찾을 수 없습니다.....</h2>
+            </Card>
+            
         </div>
         )
     }
