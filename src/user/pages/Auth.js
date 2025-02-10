@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Input from '../../shared/components/FormElements/Input';
 import Card from '../../shared/components/UIElements/Card';
@@ -6,11 +6,14 @@ import { VALIDATOR_REQUIRE, VALIDATOR_EMAIL, VALIDATOR_MINLENGTH } from '../../s
 import Button from '../../shared/components/FormElements/Button';
 import '../../places/pages/PlaceForm.css';
 import { useForm } from '../../shared/hooks/form-hook';
+import './Auth.css';
 
 
 const Auth = () => {
 
-    const [formState, inputHandler] = useForm(
+    const [isLoginMode, setIsLoginMode] = useState(true)
+
+    const [formState, inputHandler, setFormData] = useForm(
         {
             email : {
                 value: '',
@@ -24,41 +27,84 @@ const Auth = () => {
 );
 
 
-const RegisterHandler = event => {
+const switchModeHandler = () => {
+    if (!isLoginMode) {
+      setFormData(
+        {
+          ...formState.inputs,
+          name: undefined
+        },
+        formState.inputs.email.isValid && formState.inputs.password.isValid
+      );
+    } else {
+      setFormData(
+        {
+          ...formState.inputs,
+          name: {
+            value: '',
+            isValid: false
+          }
+        },
+        false
+      );
+    }
+    setIsLoginMode(prevMode => !prevMode);
+  };
+
+
+const authSubmitHandler = event => {
     event.preventDefault();
     console.log(formState.inputs)
 }
 
 
-    
-
 
     return (
         <div>
-            <Card>
-                <form className='place-form' onSubmit={RegisterHandler}>
+            <Card className="authentication">
+                <h2>
+                    {
+                    isLoginMode ? '로그인' : '회원가입'
+                    }
+                </h2>
+                <hr />
+                <form  onSubmit={authSubmitHandler}>
+                    {
+                    !isLoginMode && (
+                    <Input 
+                    element="input" 
+                    id="name" 
+                    type="text" 
+                    label="Name" 
+                    validators={[VALIDATOR_REQUIRE()]}
+                    errorText="이름을 입력해주세요."
+                    onInput={inputHandler}
+                     /> 
+                     )}
                     <Input
                     id="email"
                     element="input"
                     type="email"
-                    label="email"
-                    validators={[VALIDATOR_REQUIRE(), VALIDATOR_EMAIL()]}
-                    errorText="이메일을 형식으로 입력하세요. (EX 123@123.com)"
+                    label="E-Mail"
+                    validators={[VALIDATOR_EMAIL()]}
+                    errorText="이메일 형식으로 입력하세요. (EX 123@123.com)"
                     onInput={inputHandler}
-                    >
-                    </Input>
+                    />
+                    
                     <Input
                     id="password"
                     element="input"
                     type="password"
-                    label="password"
-                    validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(10)]}
+                    label="Password"
+                    validators={[VALIDATOR_MINLENGTH(10)]}
                     errorText="비밀번호 입력하세요.(10글자 이상)"
                     onInput={inputHandler}
-                    >
-                    </Input>
-                    <Button type="submit" disabled={!formState.isValid}>회원가입</Button>
+                    />
+                    <Button type="submit" disabled={!formState.isValid}>
+                        {isLoginMode ? '로그인' : '회원가입'}
+                        </Button>
                 </form>
+                <Button inverse onClick={switchModeHandler}>{isLoginMode ? '회원가입' : '로그인'}</Button>
             </Card>
         </div>
     )
