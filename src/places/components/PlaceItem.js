@@ -28,6 +28,7 @@ const PlaceItem = props => {
     }
 
     const confirmDeleteHandler = () => {
+        setShowComfirmModal(false);
         console.log('DELETEING...')
     }
 
@@ -48,18 +49,21 @@ const PlaceItem = props => {
                 </div>
             </Modal>
             <Modal
+
             show={showComfirmModal}
             onCancel={cancelDeleteHandler}
-
             header="확실합니까?" 
-            className="place-item__modal-actions" 
+            footerClass="place-item__modal-actions"
             footer={
                 <React.Fragment>
                     <Button inverse onClick={cancelDeleteHandler}>취소</Button>
                     <Button danger onClick={confirmDeleteHandler}>삭제</Button>
                 </React.Fragment>
-            } >
-                <p>삭제하시겠습니까? 삭제 후에는 취소할 수 없습니다.</p>
+                } 
+            >
+                <p>
+                    삭제하시겠습니까? 삭제 후에는 취소할 수 없습니다.
+                </p>
             </Modal>
             <li className="place-item">
                 <Card className="place-item__content">
