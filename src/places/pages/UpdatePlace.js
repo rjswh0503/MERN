@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
@@ -37,11 +38,13 @@ const DUMMY_PLACES = [
 
 const UpdatePlace = () => {
 
+    const [isLoading, setIsLoading] = useState(true);
+
     const placeId = useParams().placeId;
     
     
     
-    const [formState, inputHandler] = useForm({
+    const [formState, inputHandler, setFormData] = useForm({
         title: {
             value : '',
             isValid: false
@@ -56,18 +59,46 @@ const UpdatePlace = () => {
 
     const identfiedPlace = DUMMY_PLACES.find(p => p.id === placeId)
 
+    useEffect(() => {
+        setFormData({
+            title: {
+                value : identfiedPlace.title,
+                isValid: true
+            },
+            description: {
+                value : identfiedPlace.description,
+                isValid: true
+            }
+        }, 
+        true
+    );
+    setIsLoading(false)
+    }, [setFormData, identfiedPlace])
+    
+
     const placeUpdateHandler = event => {
         event.preventDefault();
         console.log(formState.inputs)
     }
     
     if(!identfiedPlace){
-        return <div className="center">
+        return ( <div className="center">
             <h2>장소를 찾을 수 없습니다.</h2>
         </div>
+        )
     }
 
-    return <form className="place-form" onSubmit={placeUpdateHandler}>
+    if(isLoading) {
+        return ( 
+        <div className="center">
+            <h2>Loading....</h2>
+        </div>
+        );
+    }
+
+    return (
+        formState.inputs.title.value &&  
+    <form className="place-form" onSubmit={placeUpdateHandler}>
         <Input id="title" 
         element="input" 
         type="text" 
@@ -88,9 +119,9 @@ const UpdatePlace = () => {
         initialValid={formState.inputs.description.isValid}
         />
         <Button type="submit" disabled={!formState.isValid}>수정하기</Button>
-
     </form>
-
+        
+    )
 }
 
 export default UpdatePlace;

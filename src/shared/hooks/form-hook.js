@@ -20,7 +20,6 @@ const formReducer = (state, action) => {
           },
           isValid: formIsValid
         };
-
         case 'SET_DATA':
           return {
             inputs: action.inputs,
@@ -53,8 +52,8 @@ export const useForm = (initialInputs, initialFormValidity) => {
           type: 'SET_DATA',
           inputs: inputData,
           formIsValid: formValidity
-        })
-      })
+        });
+      },[]);
 
       return [formState, inputHandler, setFormData];
 

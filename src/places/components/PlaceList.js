@@ -1,6 +1,7 @@
 import React from "react";
 
 import Card from '../../shared/components/UIElements/Card';
+import Button from "../../shared/components/FormElements/Button";
 import './PlaceList.css';
 import PlaceItem from "./PlaceItem";
 
@@ -10,7 +11,7 @@ const PlaceList = props => {
         return <div className="place-list center">
             <Card>
                 <h2>장소를 찾을 수 없습니다. </h2>
-                <button>장소 공유</button>
+                <Button to="/places/new">장소 공유</Button>
             </Card>
 
         </div>
