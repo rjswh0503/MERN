@@ -26,7 +26,7 @@ const NavLinks = props => {
         )}
         {!auth.isLoggedIn && ( 
         <li>
-            <NavLink to="/auth">인증기능</NavLink>
+            <NavLink to="/auth">로그인</NavLink>
         </li>
         )}
         {auth.isLoggedIn && (
