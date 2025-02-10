@@ -12,12 +12,26 @@ const PlaceItem = props => {
 
     const [showMap, setShowMap] = useState(false);
 
+    const [showComfirmModal, setShowComfirmModal] = useState(false);
+
 
     const openMapHandler = () =>  setShowMap(true);
 
     const closeMapHandler = () => setShowMap(false);
 
-    
+    const ShowDeleteWaringHandler = () =>{
+        setShowComfirmModal(true);
+    }    
+
+    const cancelDeleteHandler = () => {
+        setShowComfirmModal(false);
+    }
+
+    const confirmDeleteHandler = () => {
+        console.log('DELETEING...')
+    }
+
+
     return ( 
         <React.Fragment>
             <Modal 
@@ -33,6 +47,20 @@ const PlaceItem = props => {
                     <Map center={props.coordinates} zoom={16}/>
                 </div>
             </Modal>
+            <Modal
+            show={showComfirmModal}
+            onCancel={cancelDeleteHandler}
+
+            header="확실합니까?" 
+            className="place-item__modal-actions" 
+            footer={
+                <React.Fragment>
+                    <Button inverse onClick={cancelDeleteHandler}>취소</Button>
+                    <Button danger onClick={confirmDeleteHandler}>삭제</Button>
+                </React.Fragment>
+            } >
+                <p>삭제하시겠습니까? 삭제 후에는 취소할 수 없습니다.</p>
+            </Modal>
             <li className="place-item">
                 <Card className="place-item__content">
                     <div className="place-item__image">
@@ -47,7 +75,7 @@ const PlaceItem = props => {
                     <div className="place-item__actions">
                         <Button inverse onClick={openMapHandler}>지도 보기</Button>
                         <Button to={`/places/${props.id}`}>수정</Button>
-                        <Button danger >삭제</Button>
+                        <Button danger onClick={ShowDeleteWaringHandler}>삭제</Button>
                     </div>
                 </Card>
             </li>
