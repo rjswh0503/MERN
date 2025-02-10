@@ -1,8 +1,11 @@
-import React, { useParams} from 'react-router-dom';
+import React from "react";
+import { useParams } from "react-router-dom";
 
-
-
-import PlaceList from "../components/PlaceList";
+import Input from "../../shared/components/FormElements/Input";
+import Button from "../../shared/components/FormElements/Button";
+import {VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH} from '../../shared/util/validators';
+import { useForm } from '../../shared/hooks/form-hook';
+import './PlaceForm.css';
 
 const DUMMY_PLACES = [
     {
@@ -30,16 +33,64 @@ const DUMMY_PLACES = [
         creator : 'u1'
     }
     
-];
+]
 
-const UserPlaces = () => {
+const UpdatePlace = () => {
 
-    const userId = useParams().userId;
-    const loadedPlaces = DUMMY_PLACES.filter(place => place.creator === userId);
+    const placeId = useParams().placeId;
+    
+    
+    
+    const [formState, inputHandler] = useForm({
+        title: {
+            value : '',
+            isValid: false
+        },
+        description: {
+            value : '',
+            isValid: false
+        }
+    }, 
+    false
+);
 
+    const identfiedPlace = DUMMY_PLACES.find(p => p.id === placeId)
 
+    const placeUpdateHandler = event => {
+        event.preventDefault();
+        console.log(formState.inputs)
+    }
+    
+    if(!identfiedPlace){
+        return <div className="center">
+            <h2>장소를 찾을 수 없습니다.</h2>
+        </div>
+    }
 
-    return <PlaceList items={loadedPlaces}/>
+    return <form className="place-form" onSubmit={placeUpdateHandler}>
+        <Input id="title" 
+        element="input" 
+        type="text" 
+        label="title"
+        validators={[VALIDATOR_REQUIRE()]}
+        errorText="제목을 입력해주세요."
+        onInput={inputHandler}
+        initialValue={formState.inputs.title.value}
+        initialValid={formState.inputs.title.isValid}
+        />
+        <Input id="description" 
+        element="textarea" 
+        label="Description"
+        validators={[VALIDATOR_MINLENGTH(5)]}
+        errorText="설명을 입력하세요..(최소5글자)"
+        onInput={inputHandler}
+        initialValue={formState.inputs.description.value}
+        initialValid={formState.inputs.description.isValid}
+        />
+        <Button type="submit" disabled={!formState.isValid}>수정하기</Button>
+
+    </form>
+
 }
 
-export default UserPlaces;
+export default UpdatePlace;
