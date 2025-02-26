@@ -12,25 +12,25 @@ import './Auth.css';
 
 const Auth = () => {
 
-    const auth = useContext(AuthContext);
+  const auth = useContext(AuthContext);
 
-    const [isLoginMode, setIsLoginMode] = useState(true)
+  const [isLoginMode, setIsLoginMode] = useState(true)
 
-    const [formState, inputHandler, setFormData] = useForm(
-        {
-            email : {
-                value: '',
-                isValid: false
-            },
-            password : {
-                value: '',
-                isValid: false
-            }
+  const [formState, inputHandler, setFormData] = useForm(
+    {
+      email: {
+        value: '',
+        isValid: false
+      },
+      password: {
+        value: '',
+        isValid: false
+      }
     }, false
-);
+  );
 
 
-const switchModeHandler = () => {
+  const switchModeHandler = () => {
     if (!isLoginMode) {
       setFormData(
         {
@@ -55,65 +55,87 @@ const switchModeHandler = () => {
   };
 
 
-const authSubmitHandler = event => {
+  const authSubmitHandler = async event => {
     event.preventDefault();
-    console.log(formState.inputs)
+
+    if (isLoginMode) {
+
+    } else {
+      try {
+        const response = await fetch('http://localhost:5000/api/users/signUp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: formState.inputs.name.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value
+          })
+        });
+        const responseData = await response.json();
+        console.log(responseData);
+      } catch (err) {
+        console.log(err);
+      }
+
+    }
+
+
+
     auth.login();
-}
+  }
 
 
+  return (
+    <div>
+      <Card className="authentication">
+        <h2>
+          {
+            isLoginMode ? '로그인' : '회원가입'
+          }
+        </h2>
+        <hr />
+        <form onSubmit={authSubmitHandler}>
+          {
+            !isLoginMode && (
+              <Input
+                element="input"
+                id="name"
+                type="text"
+                label="Name"
+                validators={[VALIDATOR_REQUIRE()]}
+                errorText="이름을 입력해주세요."
+                onInput={inputHandler}
+              />
+            )}
+          <Input
+            id="email"
+            element="input"
+            type="email"
+            label="E-Mail"
+            validators={[VALIDATOR_EMAIL()]}
+            errorText="이메일 형식으로 입력하세요. (EX 123@123.com)"
+            onInput={inputHandler}
+          />
 
-
-
-    return (
-        <div>
-            <Card className="authentication">
-                <h2>
-                    {
-                    isLoginMode ? '로그인' : '회원가입'
-                    }
-                </h2>
-                <hr />
-                <form  onSubmit={authSubmitHandler}>
-                    {
-                    !isLoginMode && (
-                    <Input 
-                    element="input" 
-                    id="name" 
-                    type="text" 
-                    label="Name" 
-                    validators={[VALIDATOR_REQUIRE()]}
-                    errorText="이름을 입력해주세요."
-                    onInput={inputHandler}
-                     /> 
-                     )}
-                    <Input
-                    id="email"
-                    element="input"
-                    type="email"
-                    label="E-Mail"
-                    validators={[VALIDATOR_EMAIL()]}
-                    errorText="이메일 형식으로 입력하세요. (EX 123@123.com)"
-                    onInput={inputHandler}
-                    />
-                    
-                    <Input
-                    id="password"
-                    element="input"
-                    type="password"
-                    label="Password"
-                    validators={[VALIDATOR_MINLENGTH(10)]}
-                    errorText="비밀번호 입력하세요.(10글자 이상)"
-                    onInput={inputHandler}
-                    />
-                    <Button type="submit" disabled={!formState.isValid}>
-                        {isLoginMode ? '로그인' : '회원가입'}
-                        </Button>
-                </form>
-                <Button inverse onClick={switchModeHandler}>{isLoginMode ? '회원가입' : '로그인'}</Button>
-            </Card>
-        </div>
-    )
+          <Input
+            id="password"
+            element="input"
+            type="password"
+            label="Password"
+            validators={[VALIDATOR_MINLENGTH(10)]}
+            errorText="비밀번호 입력하세요.(10글자 이상)"
+            onInput={inputHandler}
+          />
+          <Button type="submit" disabled={!formState.isValid}>
+            {isLoginMode ? '로그인' : '회원가입'}
+          </Button>
+        </form>
+        <Button inverse onClick={switchModeHandler}>{isLoginMode ? '회원가입' : '로그인'}</Button>
+      </Card>
+    </div>
+  )
 
 
 }
