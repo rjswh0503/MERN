@@ -62,11 +62,35 @@ const Auth = () => {
   const authSubmitHandler = async event => {
     event.preventDefault();
 
-    if (isLoginMode) {
+    setIsLoading(true);
 
+    if (isLoginMode) {
+      try {
+
+        const response = await fetch('http://localhost:5000/api/users/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value
+          })
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+        console.log(responseData);
+        setIsLoading(false);
+        auth.login();
+      } catch (err) {
+        setIsLoading(false);
+        setError(err.message || '오류가 발생하였습니다, 다시 시도 해 주세요.');
+      }
     } else {
       try {
-        setIsLoading(true);
+
         const response = await fetch('http://localhost:5000/api/users/signUp', {
           method: 'POST',
           headers: {
@@ -99,7 +123,7 @@ const Auth = () => {
 
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={errorHandler}/>
+      <ErrorModal error={error} onClear={errorHandler} />
       <div>
         <Card className="authentication">
           {isLoading && <LoadingSpinner asOverlay />}
