@@ -8,17 +8,15 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import '../../places/pages/PlaceForm.css';
 import { useForm } from '../../shared/hooks/form-hook';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
 
 
 const Auth = () => {
-
   const auth = useContext(AuthContext);
-
-  const [isLoginMode, setIsLoginMode] = useState(true)
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -30,9 +28,9 @@ const Auth = () => {
         value: '',
         isValid: false
       }
-    }, false
+    },
+    false
   );
-
 
   const switchModeHandler = () => {
     if (!isLoginMode) {
@@ -58,72 +56,49 @@ const Auth = () => {
     setIsLoginMode(prevMode => !prevMode);
   };
 
-
   const authSubmitHandler = async event => {
     event.preventDefault();
 
-    setIsLoading(true);
-
     if (isLoginMode) {
       try {
-
-        const response = await fetch('http://localhost:5000/api/users/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+        await sendRequest(
+          'http://localhost:5000/api/users/login',
+          'POST',
+          JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value
-          })
-        });
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
-        }
-        console.log(responseData);
-        setIsLoading(false);
-        auth.login();
-      } catch (err) {
-        setIsLoading(false);
-        setError(err.message || '오류가 발생하였습니다, 다시 시도 해 주세요.');
-      }
-    } else {
-      try {
-
-        const response = await fetch('http://localhost:5000/api/users/signUp', {
-          method: 'POST',
-          headers: {
+          }),
+          {
             'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
+          }
+        );
+        auth.login();
+      } catch (err) { }
+
+    } else {
+
+      try {
+        await sendRequest(
+          'http://localhost:5000/api/users/signup',
+          'POST',
+          JSON.stringify({
             name: formState.inputs.name.value,
             email: formState.inputs.email.value,
             password: formState.inputs.password.value
-          })
-        });
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
-        }
-        console.log(responseData);
-        setIsLoading(false);
+          }),
+          {
+            'Content-Type': 'application/json'
+          }
+        );
+
         auth.login();
-      } catch (err) {
-        setIsLoading(false);
-        setError(err.message || '오류가 발생하였습니다, 다시 시도 해 주세요.');
-      }
+      } catch (err) { }
     }
   };
 
-  const errorHandler = () => {
-    setError(null);
-  }
-
-
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={errorHandler} />
+      <ErrorModal error={error} onClear={clearError} />
       <div>
         <Card className="authentication">
           {isLoading && <LoadingSpinner asOverlay />}
@@ -173,9 +148,7 @@ const Auth = () => {
         </Card>
       </div>
     </React.Fragment>
-  )
-
-
-}
+  );
+};
 
 export default Auth;

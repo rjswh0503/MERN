@@ -9,7 +9,7 @@ const ErrorModal = props => {
       onCancel={props.onClear}
       header="오류가 발생했습니다!"
       show={!!props.error}
-      footer={<Button onClick={props.onClear}>Okay</Button>}
+      footer={<Button onClick={props.onClear}>확인</Button>}
     >
       <p>{props.error}</p>
     </Modal>
