@@ -5,6 +5,7 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
@@ -29,6 +30,10 @@ const NewPlace = () => {
       address: {
         value: '',
         isValid: false
+      },
+      image: {
+        value: null,
+        isValid: false
       }
     }, false
   );
@@ -37,19 +42,18 @@ const NewPlace = () => {
 
   const placeSubmitHnadler = async event => {
     event.preventDefault();
-    try{
-      await sendRequest('http://localhost:5000/api/places', 'POST', JSON.stringify({
-        title: formState.inputs.title.value,
-        description: formState.inputs.description.value,
-        address: formState.inputs.address.value,
-        creator: auth.userId
-      }),
-      { 'Content-Type' : 'application/json'}
-    )
+    try {
+      const formData = new FormData();
+      formData.append('title', formState.inputs.title.value);
+      formData.append('description', formState.inputs.description.value);
+      formData.append('address', formState.inputs.address.value);
+      formData.append('creator', auth.userId);
+      formData.append('image', formState.inputs.image.value);
+      await sendRequest('http://localhost:5000/api/places','POST',formData);
     // redirect 함수인 useNavigate()를 사용
     Navigate('/');
     }catch(err){
-      
+      console.log(err)
     }
     
   }
@@ -69,7 +73,7 @@ const NewPlace = () => {
         errorText="제목을 입력하세요."
         onInput={inputHandler}
       />
-
+      
       <Input
         id="description"
         element="textarea"
@@ -88,6 +92,7 @@ const NewPlace = () => {
         errorText="주소를를 입력하세요"
         onInput={inputHandler}
       />
+      {<ImageUpload center id='image' onInput={inputHandler} errorText={'이미지를 업로드 하세요.'}/>}
 
       <Button type="submit" disabled={!formState.isValid}>추가</Button>
     </form>
