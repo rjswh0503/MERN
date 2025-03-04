@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router-dom";
-import { useParams } from "react-router-dom";
 
+import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
 import './NavLinks.css';
 
@@ -17,7 +16,7 @@ const NavLinks = props => {
         </li>
         {auth.isLoggedIn && (
             <li>
-            <NavLink to="/:userId/places">나의 장소</NavLink>
+            <NavLink to={`/${auth.userId}/places`}>나의 장소</NavLink>
         </li>
         )}
         {auth.isLoggedIn && (
