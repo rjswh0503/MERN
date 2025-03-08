@@ -70,7 +70,8 @@ const UpdatePlace = () => {
                     description: formState.inputs.description.value
                 }),
                 {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + auth.token
                 }
             );
             Navigate('/' + auth.userId + '/places');
